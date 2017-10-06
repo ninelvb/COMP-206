@@ -1,18 +1,10 @@
 #!/bin/bash
 
 #checking if no arguments are given as input
-if [ $# -ne 1 ]; then
+if [ “$1” == “” ]; then
                echo "Insufficient arguments."
                exit 1
 fi
-
-#checking if more than 1 argument is given as input
-if [ $# > 1 ]; then
-               echo "Your project name must be a single word."
-               exit 1
-fi
-
-name = $1
 
 #changing directory to home directory
 if ![$HOME == $PWD]; then
@@ -23,8 +15,7 @@ fi
 #check if subdirectory project exists then move to it
 if [-d 'project']; then
                cd project
-#if not create and change to project
-else
+else #create and change to project
                mkdir project
                cd project
 fi
@@ -32,8 +23,7 @@ fi
 #check if subdirectory cs206 exists then move to it
 if [-d 'cs206']; then
                cd cs206
-#if not create and change to cs206
-else
+else #create and change to cs206
                mkdir cs206
                cd cs206
 fi
@@ -41,10 +31,10 @@ fi
 #if subdirectory $name exists, exit
 if [-d $name]; then
                echo "This project name has already been used."
-#else create the subdirectory $name and inside other subdirectories
+               exit 1
 else
-               mkdir $name
-               cd $name
+               mkdir $1
+               cd $1
                mkdir archive backup docs assets database source
 fi
 
