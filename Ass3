@@ -1,98 +1,94 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
-main(){
-  //declaring vaiables
-  int i=0;
-  int diff;
-  int shift;
-  //Taking input
-  printf("Sentence: ");
-  
-  //declare character array
-  char string[100];
-  fgets( string, sizeof string, stdin );
-  string[99]='\n';
-  
-  printf("Key: ");
-  //the key has to be between 1 and 25 (both included)
-  if (1<=(scanf("%d"))<=25){
-    scanf("%d", shift);
-  }
-  else{
-    return(0);
-  }
- 
- printf("Original message: %s\n", string);
+int main(){
+        //declaring vaiables
+        int i=0;
+        int diff;
+        int shift;
+        //Taking input
+        printf("Sentence: ");
 
-  //Encrypting the sentence
-  //Loop through character array, until end of string ('\0') is reached 
-  while (string[i]!='\0') {
-    //Ignore all non alphabetical values
-    if (!isalpha(string[i])){ 
-    i++;
-    continue;
-    }
-    //For uppercase
-    if(isupper(string[i])){
-      // we do - shift because we want a left shift
-      diff = string[i] - 'A' - shift;
-      if(diff >= 0){
-        string[i]= diff %26 + 'A';
-      }
-      else {
-        diff = 26 - (-1*diff)%26;
-        string[i] = diff %26 + 'A';
-      }
-    }
-    //For lowercase
-    if(islower(string[i])){
-      diff = string[i] - 'a' - shift;
-      if(diff >= 0){
-        string[i]= diff %26 + 'a';
-      }
-      else {
-        diff = 26 - (-1*diff)%26;
-        string[i] = diff %26 + 'a';
-      }
-    }  
-    i++
-  }
-  printf("Encrypted message: %s\n", string);
-    
-  //decrypt the encrypted sentence
-  while(string[i]!='0'){
-    //Ignore all non alphabetical values
-    if (!isalpha(string[i])){ 
-    i++;
-    continue;
-    }
-    //for lowercase characters
-    if(islower(string[i])){
-      diff = string[i] - 'a' + shift;
-      if(diff >= 0){
-        string[i]= diff %26 + 'a';
-      }
-      else {
-        diff = 26 - (-1*diff)%26;
-        string[i] = diff %26 + 'a';
-      }
-    }
-    //for uppercase characters
-    if(isupper(string[i])){
-      diff = string[i] - 'A' + shift;
-      if(diff >= 0){
-        string[i]= diff %26 + 'a';
-      }
-      else {
-        diff = 26 - (-1*diff)%26;
-        string[i] = diff %26 + 'a';
-      }
-    }
-    i++
-  }
-  printf("Decrypted message: %s\n", string);
-  
+        //declare character array
+        char string[101];
+        //string is an array that stores characters from stdin as ASCII codes
+        fgets( string, sizeof string, stdin );
+
+        printf("Key: ");
+        //reading an integer number into variable shift
+        scanf("%d", &shift);
+        //the key has to be between 1 and 25 (both included)
+        if (!((1<=shift)&&(shift<=25))){
+                printf("Sorry, try again with a number between 1 and 25\n");
+                return(0);
+        }
+
+        printf("Original message: %s\n", string);
+
+        //Encrypting the sentence
+        //Loop through character array, until end of string ('\0') is reached
+        while (string[i]!='\0') {
+                //Ignore all non alphabetical values
+                if (!isalpha(string[i])){
+                        i++;
+                        continue;
+                }
+                //For uppercase
+                if(isupper(string[i])){
+                        // we do - shift because we want a left shift
+                        diff = string[i] - 'A' - shift;
+                        if(diff >= 0){
+                                string[i]= diff %26 + 'A';
+                        }else {
+                                diff = 26 - (-1*diff)%26;
+                                string[i] = diff %26 + 'A';
+                        }
+                }
+                //For lowercase
+                if(islower(string[i])){
+                        diff = string[i] - 'a' - shift;
+                        if(diff >= 0){
+                                string[i]= diff %26 + 'a';
+                        }else {
+                                diff = 26 - (-1*diff)%26;
+                                string[i] = diff %26 + 'a';
+                        }
+                }
+                 i++;
+        }
+        printf("Encrypted message: %s\n", string);
+
+        //decrypt the encrypted sentence
+        i=0;
+        while(string[i]!='\0'){
+                //Ignore all non alphabetical values
+                if (!isalpha(string[i])){
+                        i++;
+                        continue;
+                }
+                //For lowercase
+                if(islower(string[i])){
+                        diff = string[i] - 'a' + shift;
+                        if(diff >= 0){
+                                string[i]= diff %26 + 'a';
+                        }else {
+                                diff = 26 - (-1*diff)%26;
+                                string[i] = diff %26 + 'a';
+                        }
+                }
+                //For uppercase
+                if(isupper(string[i])){
+                        diff = string[i] - 'A' + shift;
+                        if(diff >= 0){
+                                string[i]= diff %26 + 'A';
+                        }else {
+                                diff = 26 - (-1*diff)%26;
+                                string[i] = diff %26 + 'A';
+                        }
+                }
+                i++;
+        }
+        printf("Decrypted message: %s\n", string);
+
 }
-      
-  
