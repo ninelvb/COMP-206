@@ -3,102 +3,103 @@
 #include <string.h>
 
 void FindRecord(char *filename, char *name, char record[]) {
-	char buff[1000];
-	FILE *input_file = fopen(filename, "rt");
-	if (input_file == NULL) {
-		exit(1); //the text file doesn't exist
-	}
-	while(fgets(buff, 1000, input_file)) {
-		int value = 1;
-		for (int i = 0; buff[i]!=','; i++) {
-			if(name[i] != buff[i]){
-				value = 0;
-				break;
-			}
-		}
-		if (value == 1) {
-			for(int j = 0; j < sizeof(buff); j++){
-				record[j] = buff[j];
-			}
-		}
-	}
-	if (record[0] == '\0') {
-		printf("Record not found!\n");
-	}
-	fclose(input_file);
+        char buff[1000];
+        FILE *input_file = fopen(filename, "rt");
+        if (input_file == NULL) {
+                exit(1); //the text file does not exist
+        }
+        while(fgets(buff, 1000, input_file)) {
+                int value = 1;
+                for (int i = 0; buff[i]!=','; i++) {
+                        if(name[i] != buff[i]){
+                                value = 0;
+                                break;
+                        }
+                }
+                if (value == 1) {
+                        for(int j = 0; j < sizeof(buff); j++){
+                                record[j] = buff[j];
+                        }
+                }
+        }
+        if (record[0] == '\0') {
+                printf("Could not find the record.\n");
+        }
+        fclose(input_file);
 }
 
 void Replace(char *name, char *newname, char record[]) {
-	char temporary[1000];
-	int i = 0;
-	while(*(record+i) != ','){
-		i++;
-	} //i is now the position of the comma
-	int j = 0;
-	while (*(newname+j) != '\n') {
-		*(temporary+j) = *(newname+j);
-		j++;
-	} //j is now at the end of newname
-	int k = 0;
-	while (*(record+i+k) != '\0') {
-		*(temporary+j+k) = *(record+i+k);
-		k++;
-	} //temporary now contains newname + all content of record starting at position i
-	*(temporary+j+k) = '\0'; //we add the null character to show where the array ends
-	int l = 0;
-	while (*(temporary+l) != '\0') {
-		*(record+l) = *(temporary+l); //we copy all content of temp into record
-		l++;
-	}
-	*(record+l)='\0'; //we add the null character to show where the array ends
+        char temporary[1000];
+        int i = 0;
+        while(*(record+i) != ','){
+                i++;
+        } //i is now the position of the comma
+        int j = 0;
+        while (*(newname+j) != '\n') {
+                *(temporary+j) = *(newname+j);
+                j++;
+        } //j is now at the end of newname
+        int k = 0;
+        while (*(record+i+k) != '\0') {
+                *(temporary+j+k) = *(record+i+k);
+                k++;
+        } //temporary now contains newname + all content of record starting at position i
+        *(temporary+j+k) = '\0'; //we add the null character to show where the array ends
+        int l = 0;
+        while (*(temporary+l) != '\0') {
+                *(record+l) = *(temporary+l); //we copy all content of temp into record
+                l++;
+        }
+        *(record+l)='\0'; //we add the null character to show where the array ends
 }
 
-void SaveRecord(char *filename, char *name, char record[]){  
-	char buff[1000];
-  	FILE *input_file = fopen(filename, "rt"); //will read from the text file
-	char lines[1000];
-	int n = 0;
-	while(fgets(buff, 1000, input_file)) {
-		int value = 1;
-		for (int i = 0; buff[i]!=','; i++) {
-			if(name[i] != buff[i]){
-				value = 0;
-				break;
-			}
-		}
-		if (value == 1) {
-			lines[n] = record;
-		}else {
-			lines[n] = buff;
-		}
-		n++;
-	}
-	lines[n] = '\0';
-	fclose(input_file);
+void SaveRecord(char *filename, char *name, char record[]){
+        char buff[1000];
+        FILE *input_file = fopen(filename, "rt"); //will read from the text file
+        FILE *temporary = fopen("temporary.csv", "wt");
+        int n = 0;
+        while(fgets(buff, 1000, input_file)) {
+                int value = 1;
+                for (int i = 0; buff[i]!=','; i++) {
+                        if(name[i] != buff[i]){
+                                value = 0;
+                                break;
+                        }
+                }
+                if (value == 1) {
+                        fprintf(temporary, "%s", record);
+                }else {
+                        fprintf(temporary, "%s", buff);
+                }
+                n++;
+        }
+        fclose(temporary);
+        fclose(input_file);
 
-	FILE *final_file = fopen(filename, "wt"); //will overwrites and write to the text file
-  	for (int m = 0; m < 1000; m++) {
-    		fputs(&lines[m],final_file);
-	}
-	fclose(final_file);
+        char secondBuff[1000];
+        FILE *secondTemp = fopen("temporary.csv", "rt");
+        FILE *final_file = fopen(filename, "wt"); //will overwrites and write to the text file
+        while(fgets(secondBuff, 1000, secondTemp)){
+                fprintf(final_file, "%s", secondBuff);
+        }
+        fclose(final_file);
+        fclose(secondTemp);
 }
 
 int main(){
         char record[1000];
-        //char *name, *newname; 
         char name[1000], newname[1000];
         char *filename = "phonebook.csv";
         printf("Enter the name you wish to replace: ");
-        //scanf("%s", name);
-        fgets(&name, 1000, stdin);
+        fgets(name, 1000, stdin);
         FindRecord(filename, name, record);
-        printf("record: %s\n", record);
+        //printf("record: %s\n", record);
         printf("Enter the new name: ");
-        //scanf("%s", newname);
-        fgets(&newname, 1000, stdin);
+        fgets(newname, 1000, stdin);
         Replace(name, newname, record);
-        printf("record: %s\n", record);
+        //printf("record: %s\n", record);
         SaveRecord(filename, name, record);
-        printf("record: %s\n", record);
+        //printf("record: %s\n", record);
         return 0;
 }
+
