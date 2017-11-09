@@ -55,7 +55,7 @@ void Replace(char *name, char *newname, char record[]) {
 
 void SaveRecord(char *filename, char *name, char record[]){  
 	char buff[1000];
-  FILE *input_file = fopen(filename, "rt"); //will read from the text file
+  	FILE *input_file = fopen(filename, "rt"); //will read from the text file
 	char lines[1000];
 	int n = 0;
 	while(fgets(buff, 1000, input_file)) {
@@ -68,8 +68,7 @@ void SaveRecord(char *filename, char *name, char record[]){
 		}
 		if (value == 1) {
 			lines[n] = record;
-		}
-	  else {
+		}else {
 			lines[n] = buff;
 		}
 		n++;
@@ -78,8 +77,8 @@ void SaveRecord(char *filename, char *name, char record[]){
 	fclose(input_file);
 
 	FILE *final_file = fopen(filename, "wt"); //will overwrites and write to the text file
-  for (int m = 0; m < 1000; m++) {
-    fputs(&lines[m],final_file);
+  	for (int m = 0; m < 1000; m++) {
+    		fputs(&lines[m],final_file);
 	}
 	fclose(final_file);
 }
